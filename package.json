@@ -1,0 +1,22 @@
+{
+  "name": "wormtracer",
+  "version": "1.0.0",
+  "description": "simple function instrumenter",
+  "main": "wormtracer.js",
+  "dependencies": {
+    "esmorph": "^0.0.1",
+    "esprima": "^1.2.2",
+    "estraverse": "^1.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "./wormtracer example.js"
+  },
+  "keywords": [
+    "esprima",
+    "esmorph",
+    "instrumentation"
+  ],
+  "author": "Yaroslav Serhieiev",
+  "license": "MIT"
+}
