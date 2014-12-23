@@ -1,7 +1,5 @@
-#!/usr/local/bin/node
-
 var fs = require('fs'),
-    esmorph = require('esmorph');
+    esmorph = require('./esmorph');
 
 function main(argv) {
     var fin = argv[2],
@@ -37,20 +35,21 @@ function instrument(code, filename) {
         });
     }
 
-    if (code.indexOf('TRACE.onEnter(') >= 0) {
+    if (code.indexOf('{TRACE.onEnter(') !== -1) {
         return code;
     }
 
     onEnter = esmorph.Tracer.FunctionEntrance(function (fn) {
-        return '\nTRACE.onEnter(' + J$(fn) + ');';
+        return 'TRACE.onEnter(' + J$(fn) + ');';
     });
 
     onExit = esmorph.Tracer.FunctionExit(function (fn) {
-        return '\nTRACE.onExit(' + J$(fn) + ');';
+        return 'TRACE.onExit(' + J$(fn) + ');';
     });
 
-    code = esmorph.modify(code, onEnter);
-    code = esmorph.modify(code, onExit);
+    debugger;
+    code = esmorph.modify(code, [onEnter, onExit]);
+
     return code;
 }
 

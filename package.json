@@ -4,13 +4,11 @@
   "description": "simple function instrumenter",
   "main": "wormtracer.js",
   "dependencies": {
-    "esmorph": "^0.0.1",
-    "esprima": "^1.2.2",
-    "estraverse": "^1.9.0"
+    "esprima": "^1.2.2"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "./wormtracer example.js"
+    "test": "node wormtracer example.js"
   },
   "keywords": [
     "esprima",
