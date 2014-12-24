@@ -120,8 +120,6 @@
         options = options || {};
 
         function calculatePositions(node) {
-            debugger;
-
             var pos = [],
                 lastChild,
                 posEntrance,
@@ -133,12 +131,12 @@
             // calculate exit position
             lastChild = node.body.body[node.body.body.length - 1];
 
-            if(!lastChild) {
+            if (!lastChild) {
                 posExit = node.body.range[0];
             } else if (lastChild.type === Syntax.ReturnStatement) {
                 posExit = lastChild.range[0] - 1;
             } else {
-                posExit = lastChild.range[1] - 1;
+                posExit = node.body.range[1] - 2;
             }
 
             if (options.entrance) {
@@ -202,13 +200,21 @@
                 }
 
                 if (functionName) {
-                    functionList.push({
-                        name: functionName,
-                        range: node.range,
-                        loc: node.loc,
-                        blockStarts: calculatePositions(node)
-                    });
+                    functionList = functionList.concat(
+                        calculatePositions(node).map(function (pos) {
+                            return {
+                                name: functionName,
+                                range: node.range,
+                                loc: node.loc,
+                                blockStarts: pos
+                            };
+                        })
+                    );
                 }
+            });
+
+            functionList.sort(function (a, b) {
+                return a.blockStarts - b.blockStarts;
             });
 
             // Insert the instrumentation code from the last entry.
@@ -234,14 +240,8 @@
                     signature += '});';
                 }
 
-                if (typeof flItem.blockStarts === "number") {
-                    flItem.blockStarts = [flItem.blockStarts];
-                }
-
-                for (j = flItem.blockStarts.length - 1; j >= 0; j -= 1) {
-                    pos = flItem.blockStarts[j] + 1;
-                    code = code.slice(0, pos) + signature + code.slice(pos, code.length);
-                }
+                pos = flItem.blockStarts + 1;
+                code = code.slice(0, pos) + signature + code.slice(pos, code.length);
             }
 
             return code;
